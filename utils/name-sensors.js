@@ -14,7 +14,7 @@ sensors.getAll(function (err, results) { if (err) throw err;
             var diff = newResults.map(function (temp, i) { return Math.abs(temp - results[i]); });
 
             console.log(diff);
-            system.exit();
+            process.exit();
         });
     }, 500);
 

@@ -56,6 +56,8 @@ sensors.getAll(function (err, results) { if (err) throw err;
 
 function findDeviantDevice(ids, previousResults, newResults) {
 
+    if (ids.length === 2) return findDeviantDeviceOutOfTwo(ids, previousResults, newResults);
+
     var diff = diffOfArray(previousResults, newResults),
         median = medianOfArray(diff),
         threshold = median * 10,
@@ -75,6 +77,17 @@ function findDeviantDevice(ids, previousResults, newResults) {
     return (findings.length === 1) ? findings[0] : false;
 }
 
+function findDeviantDeviceOutOfTwo(ids, previousResults, newResults) {
+
+    var diff = diffOfArray(previousResults, newResults),
+        deviant = false;
+
+    if (diff[0] > 0.3) deviant = ids[0];
+    if (diff[1] > 0.3) deviant = ids[1];
+
+    return deviant;
+}
+
 function diffOfArray(a, b) {
     return a.map(function (item, index) { return Math.abs(item - b[index]); });
 }
@@ -90,8 +103,8 @@ function medianOfArray(values) {
     return (l % 2) ? v[m] : (v[m - 1] + v[m]) / 2.0;
 }
 
-//logger.setLevel(logger.levels.debug);
-//
+logger.setLevel(logger.levels.debug);
+
 //var finding = findDeviantDevice(
 //    ['a', 'b', 'c', 'd', 'e'],
 //    [1.0, 2.0, 3.0, 4.0, 5.0],

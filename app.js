@@ -1,63 +1,58 @@
 'use strict';
 
 var level = require('level'),
-    db = level('./db/first.lvl', { valueEncoding: 'json' }),
-    intervalId,
-    startTime = Date.now(),
-    i = 15;
+    timer = require('./lib/timer'),
+    sensor = require('ds18x20'),
 
-startTime = 0;
-getLatestInputs();
+    config = require('./conf.json'),
+    server = config['server'],
+    serverName = server['name'],
+    deviceNames = config['devices'] || {},
+    dbPath = config['db'],
+    pollingInterval = server['polling-interval'], // sec
 
-return;
+    db = level(dbPath, { valueEncoding: 'json' });
 
-intervalId = setInterval(function () {
+//sensor.getAll = function (callback) {
+//    setTimeout(function () {
+//        callback(null, {
+//            '28-012312312312': 16.9 + Math.floor(Math.random() * 10),
+//            '28-0ab0ab0ab0ab': -4.3 + Math.floor(Math.random() * 10),
+//            '28-089089089089': -0.1 + Math.floor(Math.random() * 10)
+//        }); },
+//        350 + Math.random() * 200);
+//};
 
-    if (--i === 0) {
-        clearInterval(intervalId);
-        console.log('last run...');
-        setTimeout(getLatestInputs, 1000);
-    }
+console.log('Starting sensor sweeps for ' + serverName);
 
-    var key = Date.now(),
-        value = [
-        {id: '28-1234', name: 'indoor', value: 21.4 + Math.floor(Math.random() * 10)},
-        {id: '28-2341', name: 'utdoor', value: 2.1 + Math.floor(Math.random() * 10)},
-        {id: '28-3412', name: 'upside', value: 13.7 + Math.floor(Math.random() * 10)}
-    ];
+timer(function () {
 
-    db.put(key, value, function (err) {
-        if (err) return console.log('Ooops putting it:', err); // some kind of I/O error
+    var key = Date.now();
 
-        // 3) fetch by key
-        db.get(key, function (err, value) {
-            if (err) return console.log('Yay, no getting it:', err); // likely the key was not found
+    getData(function (err, value) {
 
-            console.log(key + '=' + JSON.stringify(value));
+        console.log( key, '=', value );
 
-
-            if (i === 0) console.log('done!');
+        db.put(key, value, function (err) {
+            if (err) return console.log('Ooops putting it:', err); // some kind of I/O error
+            console.log( '  saved' );
         });
     });
-}, 750);
+}, pollingInterval);
 
-function getLatestInputs() {
-    db.createReadStream({start: startTime})
-        .on('data', function (data) {
-            console.log(data.key, '=', JSON.stringify(data.value));
-        })
-        .on('error', function (err) {
-            console.log('Oh my!', err);
-        })
-        .on('close', function () {
-            console.log('Stream\'s closed');
-        })
-        .on('end', function () {
-            console.log('Stream\'s to an end');
-        })
-    ;
-}
+function getData(callback) {
 
-function runAt(hour, minute, second, callback) {
+    var t = Date.now();
 
+    sensor.getAll(function (err, result) {
+
+        var value = {
+            data: [],
+            duration: Date.now() - t,
+            error: err || undefined
+        };
+        Object.keys(result).forEach(function (key) { value.data.push({id: key, value: result[key], name: deviceNames[key]}); });
+
+        callback(err, value);
+    });
 }

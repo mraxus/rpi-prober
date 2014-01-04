@@ -1,0 +1,12 @@
+{
+    "db": "./db",
+    "server": {
+        "name": "Sensor Station Alpha",
+        "polling-interval": 15
+    },
+    "devices": {
+        "28-012312312312": "indoor",
+        "28-0ab0ab0ab0ab": "outdoor",
+        "28-089089089089": "cellar"
+    }
+}

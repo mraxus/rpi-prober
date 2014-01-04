@@ -1,8 +1,10 @@
 'use strict';
 
 var level = require('level'),
-    timer = require('./lib/timer'),
     sensor = require('ds18x20'),
+
+    logger = require('./lib/logger'),
+    timer = require('./lib/timer'),
 
     config = require('./conf.json'),
     server = config['server'],
@@ -10,20 +12,13 @@ var level = require('level'),
     deviceNames = config['devices'] || {},
     dbPath = config['db'],
     pollingInterval = server['polling-interval'], // sec
+    logLevel = config['logger']['level'],
 
     db = level(dbPath, { valueEncoding: 'json' });
 
-//sensor.getAll = function (callback) {
-//    setTimeout(function () {
-//        callback(null, {
-//            '28-012312312312': 16.9 + Math.floor(Math.random() * 10),
-//            '28-0ab0ab0ab0ab': -4.3 + Math.floor(Math.random() * 10),
-//            '28-089089089089': -0.1 + Math.floor(Math.random() * 10)
-//        }); },
-//        350 + Math.random() * 200);
-//};
+logger.setLevel(logger.levels[logLevel]);
 
-console.log('Starting sensor sweeps for ' + serverName);
+logger.info(Date.now(), 'Starting sensor sweeps for ' + serverName);
 
 timer(function () {
 
@@ -31,11 +26,11 @@ timer(function () {
 
     getData(function (err, value) {
 
-        console.log( key, '=', value );
+        logger.debug( key, '=', value );
 
         db.put(key, value, function (err) {
-            if (err) return console.log('Ooops putting it:', err); // some kind of I/O error
-            console.log( '  saved' );
+            if (err) return logger.error('Ooops putting it:', err); // some kind of I/O error
+            logger.debug( '  saved' );
         });
     });
 }, pollingInterval);

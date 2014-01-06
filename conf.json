@@ -1,7 +1,8 @@
 {
     "server": {
         "name": "Sensor Station Alpha",
-        "polling-interval": 15
+        "polling-interval": 15,
+        "sensor-max-retries": 3
     },
     "db": "./db",
     "devices": {

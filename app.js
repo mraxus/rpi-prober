@@ -4,6 +4,8 @@ var level = require('level'),
     sensor = require('ds18x20'),
 
     logger = require('./lib/logger'),
+    SensorRetries = require('./lib/sensor-retries'),
+    sensorRetries,
     timer = require('./lib/timer'),
 
     config = require('./conf.json'),
@@ -12,13 +14,15 @@ var level = require('level'),
     deviceNames = config['devices'] || {},
     dbPath = config['db'],
     pollingInterval = server['polling-interval'], // sec
+    maxRetries = server['sensor-max-retries'],
     logLevel = config['logger']['level'],
 
     db = level(dbPath, { valueEncoding: 'json' });
 
 logger.setLevel(logger.levels[logLevel]);
-
 logger.info(Date.now(), 'Starting sensor sweeps for ' + serverName);
+
+sensorRetries = SensorRetries(sensor, maxRetries);
 
 timer(function () {
 
@@ -39,14 +43,22 @@ function getData(callback) {
 
     var t = Date.now();
 
-    sensor.getAll(function (err, result) {
+    sensorRetries.get(function (err, result) {
 
         var value = {
             data: [],
             duration: Date.now() - t,
             error: err || undefined
         };
-        Object.keys(result).forEach(function (key) { value.data.push({id: key, value: result[key], name: deviceNames[key]}); });
+
+        Object.keys(result).forEach(function (key) {
+            value.data.push({
+                id: key,
+                value: result[key].value,
+                name: deviceNames[key],
+                retries: result[key].retries
+            });
+        });
 
         callback(err, value);
     });

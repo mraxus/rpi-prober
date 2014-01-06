@@ -1,14 +1,16 @@
 {
     "server": {
         "name": "Sensor Station Alpha",
-        "polling-interval": 15,
+        "polling-interval": 5,
         "sensor-max-retries": 3
     },
     "db": "./db",
     "devices": {
-        "28-012312312312": "indoor",
-        "28-0ab0ab0ab0ab": "outdoor",
-        "28-089089089089": "cellar"
+        "28-0000051f18ce": "built-in",
+        "28-0000054739fa": "lodkolv",
+        "28-00000574c791": "window",
+        "28-00000574f4f3": "hanger",
+        "28-00000547a177": "rasp-backup"
     },
     "logger": {
         "level": "debug"

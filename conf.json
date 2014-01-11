@@ -14,5 +14,11 @@
     },
     "logger": {
         "level": "debug"
+    },
+    "remote": {
+        "enabled": true,
+        "host": "localhost:666",
+        "interval": 60,
+        "shift": 10
     }
 }

@@ -7,6 +7,7 @@ var level = require('level'),
     SensorRetries = require('./lib/sensor-retries'),
     sensorRetries,
     timer = require('./lib/timer'),
+    uploader = require('./lib/uploader'),
 
     config = require('./conf.json'),
     server = config['server'],
@@ -23,6 +24,9 @@ logger.setLevel(logger.levels[logLevel]);
 logger.info(Date.now(), 'Starting sensor sweeps for ' + serverName);
 
 sensorRetries = new SensorRetries(sensor, maxRetries);
+
+// Start uploader
+uploader.start(config['remote'], db, logger, timer);
 
 timer(function () {
 

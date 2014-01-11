@@ -22,7 +22,7 @@ var level = require('level'),
 logger.setLevel(logger.levels[logLevel]);
 logger.info(Date.now(), 'Starting sensor sweeps for ' + serverName);
 
-sensorRetries = SensorRetries(sensor, maxRetries);
+sensorRetries = new SensorRetries(sensor, maxRetries);
 
 timer(function () {
 
@@ -30,7 +30,7 @@ timer(function () {
 
     getData(function (err, value) {
 
-        logger.debug( key, '=', value );
+        logger.debug( key, '=', JSON.parse(JSON.stringify(value)) );
 
         db.put(key, value, function (err) {
             if (err) return logger.error('Ooops putting it:', err); // some kind of I/O error

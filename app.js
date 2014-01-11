@@ -26,7 +26,7 @@ logger.info(Date.now(), 'Starting sensor sweeps for ' + serverName);
 sensorRetries = new SensorRetries(sensor, maxRetries);
 
 // Start uploader
-uploader.start(config['remote'], db, logger, timer);
+uploader.start(config['remote'], db, logger, timer, serverName);
 
 timer(function () {
 

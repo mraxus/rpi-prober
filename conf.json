@@ -1,7 +1,7 @@
 {
     "server": {
         "name": "Sensor Station Alpha",
-        "polling-interval": 5,
+        "polling-interval": 60,
         "sensor-max-retries": 3
     },
     "db": "./db",
@@ -9,7 +9,7 @@
         "28-0000051f18ce": "built-in",
         "28-0000054739fa": "lodkolv",
         "28-00000574c791": "window",
-        "28-00000574f4f3": "hanger",
+        "28-00000574f4f3": "outside",
         "28-00000547a177": "rasp-backup"
     },
     "logger": {

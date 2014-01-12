@@ -39,9 +39,19 @@ timer(function () {
         db.put(key, value, function (err) {
             if (err) return logger.error('Ooops putting it:', err); // some kind of I/O error
             logger.debug( '  saved' );
+			logInfo(value.data);
         });
     });
 }, pollingInterval);
+
+function logInfo(value) {
+
+	var arr = value.map(function (val) {
+		return val.name + ': ' + val.value;
+	});
+
+	logger.info(new Date(), arr.join(', '));
+}
 
 function getData(callback) {
 

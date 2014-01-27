@@ -23,7 +23,7 @@ var level = require('level'),
 logger.setLevel(logger.levels[logLevel]);
 logger.info(Date.now(), 'Starting sensor sweeps for ' + serverName);
 
-sensorRetries = new SensorRetries(sensor, maxRetries);
+sensorRetries = new SensorRetries(sensor, maxRetries, logger);
 
 // Start uploader
 uploader.start(config['remote'], db, logger, timer, serverName);

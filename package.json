@@ -1,7 +1,7 @@
 {
   "name": "rpi-prober",
   "description": "Raspberry Pi application to probe the surroundings and store the findings",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "main": "main",
   "author": "Marcus Bergman <mraxus@gmail.com>",
   "scripts": {

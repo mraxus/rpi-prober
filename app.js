@@ -65,6 +65,11 @@ function getData(callback) {
             error: err || undefined
         };
 
+		if (err) {
+			logger.error(err);
+			result = {};
+		}
+
         Object.keys(result).forEach(function (key) {
             value.data.push({
                 id: key,

@@ -12,6 +12,7 @@ var level = require('level'),
     config = require('./conf.json'),
     server = config['server'],
     serverName = server['name'],
+    info = config['info'],
     deviceNames = config['devices'] || {},
     dbPath = config['db'],
     pollingInterval = server['polling-interval'], // sec
@@ -26,7 +27,7 @@ logger.info(Date.now(), 'Starting sensor sweeps for ' + serverName);
 sensorRetries = new SensorRetries(sensor, maxRetries, logger);
 
 // Start uploader
-uploader.start(config['remote'], db, logger, timer, serverName);
+uploader.start(config['remote'], db, logger, timer, serverName, info);
 
 timer(function () {
 

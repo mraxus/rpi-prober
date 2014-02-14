@@ -15,6 +15,13 @@
     "logger": {
         "level": "debug"
     },
+    "info": {
+        "location": "home",
+        "coords": {
+            "lat": "x.y",
+            "long": "x.y"
+        }
+    },
     "remote": {
         "enabled": true,
         "host": "localhost:666",
